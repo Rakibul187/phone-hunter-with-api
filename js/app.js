@@ -41,7 +41,7 @@ const displayPhones = (phones, limit) => {
                             <h5 class="card-title">${phone.phone_name}</h5>
                             <p class="card-text">This is a longer card with supporting text below as a natural
                                 lead-in to additional content. This content is a little bit longer.</p>
-                                <button onclick="loadPhoneDetails('${phone.slug}')" class="btn btn-info px-4 py-1 text-white font-bold w-50 mx-auto" data-bs-toggle="modal" data-bs-target="#exampleModal">Details</button>
+                                <button onclick="loadPhoneDetails('${phone.slug}')" class="btn btn-info px-4 py-1 text-white font-bold w-50 mx-auto" data-bs-toggle="modal" data-bs-target="#phoneModal">Details</button>
                         </div>
                     </div>
         `;
@@ -49,6 +49,28 @@ const displayPhones = (phones, limit) => {
     });
     // =============loader end============
     loaderSection(false)
+}
+
+// =================load phone details===============
+const loadPhoneDetails = async (id) => {
+    // console.log(id)
+    const url = (`https://openapi.programming-hero.com/api/phone/${id}`)
+    const res = await fetch(url)
+    const data = await res.json()
+    displayPhoneDetails(data.data)
+}
+
+const displayPhoneDetails = phone => {
+    console.log(phone)
+    const modalHeading = document.getElementById('phoneModalLabel');
+    modalHeading.innerText = phone.name
+    const modalBody = document.getElementById('modal-body');
+    modalBody.innerHTML = `
+    <p><span class="h6">Display: </span>${phone.mainFeatures.displaySize}</p>
+    <p><span class="h6">Storage: </span>${phone.mainFeatures.storage}</p>
+    <p><span class="h6">Realese Date: </span>${phone.releaseDate}</p>
+    <p><span class="h6">WLAN: </span>${phone.others.WLAN}</p>
+    `
 }
 
 // ==============search process=======================
@@ -96,12 +118,5 @@ document.getElementById('btn-show-all').addEventListener('click', function () {
     searchProcess('')
 })
 
-// =================load phone details===============
-const loadPhoneDetails = async (id) => {
-    // console.log(id)
-    const url = (`https://openapi.programming-hero.com/api/phone/${id}`)
-    const res = await fetch(url)
-    const data = await res.json()
-    console.log(data.data)
-}
-// loadPhones('')
+
+loadPhones('apple')
